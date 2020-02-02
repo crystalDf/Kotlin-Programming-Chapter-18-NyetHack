@@ -3,7 +3,7 @@ package com.star.nyethack
 
 open class Room(val name: String) {
 
-    protected open val dangerLevel = 5
+    open val dangerLevel = 5
     var monster: Monster? = Goblin()
 
     fun description() = "Room: $name\n" +

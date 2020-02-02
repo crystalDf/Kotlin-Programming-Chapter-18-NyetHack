@@ -1,5 +1,6 @@
 package com.star.nyethack
 
+import com.star.nyethack.extensions.random
 import java.io.File
 
 const val TAVERN_NAME = "Taernyl's Folly"
@@ -53,6 +54,7 @@ fun main(args: Array<String>) {
 
     patronList.forEachIndexed { index, patron ->
         println("Good evening, $patron - you're #${index + 1} in line.")
+        println("Welcome, $patron".frame(5))
     }
 
     menuList.forEachIndexed { index, data ->
@@ -60,8 +62,8 @@ fun main(args: Array<String>) {
     }
 
     repeat(10) {
-        val first = patronList.shuffled().first()
-        val last = lastName.shuffled().first()
+        val first = patronList.random()
+        val last = lastName.random()
         val name = "$first $last"
         uniquePatrons.add(name)
     }
@@ -81,8 +83,8 @@ fun main(args: Array<String>) {
         }
 
         placeOrder(
-            uniquePatrons.shuffled().first(),
-            menuList.shuffled().first()
+            uniquePatrons.random(),
+            menuList.random()
         )
         orderCount++
     }
@@ -110,7 +112,20 @@ private fun placeOrder(patronName: String, menuData: String) {
     performPurchase(price.toDouble(), name, patronName)
 }
 
-private fun toDragonSpeak(phrase: String) = phrase.replace(Regex("[aeiouAEIOU]")) {
+//private fun toDragonSpeak(phrase: String) = phrase.replace(Regex("[aeiouAEIOU]")) {
+//
+//    when (it.value.toLowerCase()) {
+//
+//        "a" -> "4"
+//        "e" -> "3"
+//        "i" -> "1"
+//        "o" -> "0"
+//        "u" -> "|_|"
+//        else -> it.value
+//    }
+//}
+
+private fun String.toDragonSpeak() = this.replace(Regex("[aeiouAEIOU]")) {
 
     when (it.value.toLowerCase()) {
 
@@ -121,6 +136,17 @@ private fun toDragonSpeak(phrase: String) = phrase.replace(Regex("[aeiouAEIOU]")
         "u" -> "|_|"
         else -> it.value
     }
+}
+
+private fun String.frame(padding: Int, formatChar: String = "*"): String {
+
+    val greeting = "$this!"
+    val middle = formatChar.padEnd(padding)
+        .plus(greeting)
+        .plus(formatChar.padStart(padding))
+    val end = (middle.indices).joinToString("") { formatChar }
+
+    return "$end\n$middle\n$end"
 }
 
 fun performPurchase(price: Double, name: String, patronName: String) {
@@ -157,8 +183,8 @@ fun performPurchase(price: Double, name: String, patronName: String) {
 
     val phrase = if (name == "Dragon's Breath") {
         remainingQuantityOfDragonBreathInPints--
-        "$patronName exclaims: ${toDragonSpeak("Ah, delicious $name!")}" + "\n" +
-                "$patronName exclaims: ${toDragonSpeak("DRAGON'S BREATH: IT'S GOT WHAT ADVENTURERS CRAVE!")}"
+        "$patronName exclaims: ${("Ah, delicious $name!").toDragonSpeak()}" + "\n" +
+                "$patronName exclaims: ${("DRAGON'S BREATH: IT'S GOT WHAT ADVENTURERS CRAVE!").toDragonSpeak()}"
     } else {
         "$patronName says: Thanks for the $name"
     }

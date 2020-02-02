@@ -16,7 +16,11 @@ object Game {
     private val statusFormatString = "(HP)(A) -> H"
 
     private var worldMap = listOf(
-        listOf(currentRoom, Room("Tavern"), Room("Back Room")),
+        listOf(currentRoom,
+            Room("Tavern").configurePitGoblin { goblin ->
+                goblin.healthPoints = dangerLevel * 3
+                goblin },
+            Room("Back Room")),
         listOf(Room("Long Corridor"), Room("Generic Room"))
     )
 
@@ -84,6 +88,14 @@ object Game {
         }
 
         println(result)
+    }
+
+    private fun Room.configurePitGoblin(block: Room.(Goblin) -> Goblin): Room {
+
+        val goblin = block(Goblin("Pit Goblin", description = "An Evil Pit Goblin"))
+        monster = goblin
+
+        return this
     }
 
     private class GameInput(arg: String?) {

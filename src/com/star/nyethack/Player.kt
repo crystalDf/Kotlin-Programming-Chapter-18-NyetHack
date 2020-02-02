@@ -1,5 +1,6 @@
 package com.star.nyethack
 
+import com.star.nyethack.extensions.random as randomizer
 import java.io.File
 import kotlin.math.min
 import kotlin.math.pow
@@ -46,8 +47,7 @@ class Player(_name: String,
     private fun selectHometown() = File("data/towns.txt")
         .readText()
         .split("\n")
-        .shuffled()
-        .first()
+        .randomizer()
 
     fun formatAuraColor() = if ((isBlessed && healthPoints > 50) || isImmortal) {
         when ((Math.random().pow((110 - healthPoints) / 100.0) * 20).toInt()) {
